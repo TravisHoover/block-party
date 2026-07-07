@@ -32,7 +32,8 @@ struct GameView: View {
                     eventBanner
                     BoardView(engine: engine,
                               cellSize: cellSize,
-                              preview: placementPreview(cellSize: cellSize))
+                              preview: placementPreview(cellSize: cellSize),
+                              gridFrame: $boardFrame)
                     Spacer(minLength: 10)
                     trayArea(cellSize: cellSize)
                     Spacer(minLength: 4)
@@ -54,7 +55,6 @@ struct GameView: View {
                         .transition(.opacity)
                 }
             }
-            .onPreferenceChange(BoardFrameKey.self) { boardFrame = $0 }
             .sheet(isPresented: $showSettings) {
                 SettingsSheet { engine.newGame() }
             }
@@ -164,8 +164,11 @@ struct GameView: View {
         // Top-left corner of the piece as drawn on screen (lifted above the finger).
         let topLeft = CGPoint(x: dragLocation.x - width / 2,
                               y: dragLocation.y - height - liftOffset)
-        let exactCol = (topLeft.x - boardFrame.minX) / cellSize
-        let exactRow = (topLeft.y - boardFrame.minY) / cellSize
+        // Convert to grid units using the measured on-screen cell size, so the
+        // math can never drift from what is actually rendered.
+        let measuredCell = boardFrame.width / CGFloat(GameEngine.size)
+        let exactCol = (topLeft.x - boardFrame.minX) / measuredCell
+        let exactRow = (topLeft.y - boardFrame.minY) / measuredCell
 
         var best: GridPoint?
         var bestDistance: CGFloat = 0.95
