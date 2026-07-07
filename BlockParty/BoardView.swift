@@ -9,7 +9,7 @@ struct PlacementPreview {
     let clearIndices: Set<Int>
 }
 
-/// Reports the board grid's frame in the "game" coordinate space
+/// Reports the board grid's frame in global (screen) coordinates
 /// so GameView can convert drag locations into board cells.
 struct BoardFrameKey: PreferenceKey {
     static var defaultValue: CGRect = .zero
@@ -77,7 +77,7 @@ struct BoardView: View {
         .background(
             GeometryReader { proxy in
                 Color.clear.preference(key: BoardFrameKey.self,
-                                       value: proxy.frame(in: .named("game")))
+                                       value: proxy.frame(in: .global))
             }
         )
         .padding(6)
