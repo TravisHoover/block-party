@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct CubeCrushApp: App {
+struct BlockPartyApp: App {
     var body: some Scene {
         WindowGroup {
             GameView()

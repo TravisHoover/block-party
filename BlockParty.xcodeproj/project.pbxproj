@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B0000000000000000000B001 /* CubeCrushApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000A001 /* CubeCrushApp.swift */; };
+		B0000000000000000000B001 /* BlockPartyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000A001 /* BlockPartyApp.swift */; };
 		B0000000000000000000B002 /* GameEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000A002 /* GameEngine.swift */; };
 		B0000000000000000000B003 /* PieceLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000A003 /* PieceLibrary.swift */; };
 		B0000000000000000000B004 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000A004 /* GameView.swift */; };
@@ -18,7 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		F0000000000000000000A001 /* CubeCrushApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CubeCrushApp.swift; sourceTree = "<group>"; };
+		F0000000000000000000A001 /* BlockPartyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockPartyApp.swift; sourceTree = "<group>"; };
 		F0000000000000000000A002 /* GameEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameEngine.swift; sourceTree = "<group>"; };
 		F0000000000000000000A003 /* PieceLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieceLibrary.swift; sourceTree = "<group>"; };
 		F0000000000000000000A004 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
@@ -26,7 +26,7 @@
 		F0000000000000000000A006 /* GameOverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverView.swift; sourceTree = "<group>"; };
 		F0000000000000000000A007 /* Haptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
 		F0000000000000000000A008 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		F0000000000000000000A009 /* CubeCrush.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CubeCrush.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F0000000000000000000A009 /* BlockParty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BlockParty.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,15 +43,15 @@
 		D0000000000000000000D001 = {
 			isa = PBXGroup;
 			children = (
-				D0000000000000000000D002 /* CubeCrush */,
+				D0000000000000000000D002 /* BlockParty */,
 				D0000000000000000000D003 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		D0000000000000000000D002 /* CubeCrush */ = {
+		D0000000000000000000D002 /* BlockParty */ = {
 			isa = PBXGroup;
 			children = (
-				F0000000000000000000A001 /* CubeCrushApp.swift */,
+				F0000000000000000000A001 /* BlockPartyApp.swift */,
 				F0000000000000000000A002 /* GameEngine.swift */,
 				F0000000000000000000A003 /* PieceLibrary.swift */,
 				F0000000000000000000A004 /* GameView.swift */,
@@ -60,13 +60,13 @@
 				F0000000000000000000A007 /* Haptics.swift */,
 				F0000000000000000000A008 /* Assets.xcassets */,
 			);
-			path = CubeCrush;
+			path = BlockParty;
 			sourceTree = "<group>";
 		};
 		D0000000000000000000D003 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F0000000000000000000A009 /* CubeCrush.app */,
+				F0000000000000000000A009 /* BlockParty.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -74,9 +74,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		E0000000000000000000E001 /* CubeCrush */ = {
+		E0000000000000000000E001 /* BlockParty */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E0000000000000000000E007 /* Build configuration list for PBXNativeTarget "CubeCrush" */;
+			buildConfigurationList = E0000000000000000000E007 /* Build configuration list for PBXNativeTarget "BlockParty" */;
 			buildPhases = (
 				E0000000000000000000E003 /* Sources */,
 				E0000000000000000000E004 /* Frameworks */,
@@ -86,9 +86,9 @@
 			);
 			dependencies = (
 			);
-			name = CubeCrush;
-			productName = CubeCrush;
-			productReference = F0000000000000000000A009 /* CubeCrush.app */;
+			name = BlockParty;
+			productName = BlockParty;
+			productReference = F0000000000000000000A009 /* BlockParty.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -106,7 +106,7 @@
 					};
 				};
 			};
-			buildConfigurationList = E0000000000000000000E006 /* Build configuration list for PBXProject "CubeCrush" */;
+			buildConfigurationList = E0000000000000000000E006 /* Build configuration list for PBXProject "BlockParty" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -119,7 +119,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				E0000000000000000000E001 /* CubeCrush */,
+				E0000000000000000000E001 /* BlockParty */,
 			);
 		};
 /* End PBXProject section */
@@ -140,7 +140,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B0000000000000000000B001 /* CubeCrushApp.swift in Sources */,
+				B0000000000000000000B001 /* BlockPartyApp.swift in Sources */,
 				B0000000000000000000B002 /* GameEngine.swift in Sources */,
 				B0000000000000000000B003 /* PieceLibrary.swift in Sources */,
 				B0000000000000000000B004 /* GameView.swift in Sources */,
@@ -282,7 +282,7 @@
 				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Cube Crush";
+				INFOPLIST_KEY_CFBundleDisplayName = "Block Party";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -294,7 +294,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.CubeCrush;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.BlockParty;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -312,7 +312,7 @@
 				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Cube Crush";
+				INFOPLIST_KEY_CFBundleDisplayName = "Block Party";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -324,7 +324,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.example.CubeCrush;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.BlockParty;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -335,7 +335,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E0000000000000000000E006 /* Build configuration list for PBXProject "CubeCrush" */ = {
+		E0000000000000000000E006 /* Build configuration list for PBXProject "BlockParty" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C0000000000000000000C001 /* Debug */,
@@ -344,7 +344,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E0000000000000000000E007 /* Build configuration list for PBXNativeTarget "CubeCrush" */ = {
+		E0000000000000000000E007 /* Build configuration list for PBXNativeTarget "BlockParty" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C0000000000000000000C003 /* Debug */,

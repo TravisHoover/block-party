@@ -1,4 +1,4 @@
-# Cube Crush 🟥🟧🟩🟦
+# Block Party 🟥🟧🟩🟦
 
 An ad-free, kid-friendly iOS block puzzle game in the style of Block Blast.
 Built with SwiftUI. **No ads, no in-app purchases, no tracking, no internet
@@ -21,14 +21,14 @@ access — ever.**
 
 ## Installing on your kid's device
 
-1. Clone this repo and open `CubeCrush.xcodeproj` in Xcode.
-2. In Xcode, select the **CubeCrush** project in the sidebar, then the
-   **CubeCrush** target → **Signing & Capabilities** tab.
+1. Clone this repo and open `BlockParty.xcodeproj` in Xcode.
+2. In Xcode, select the **BlockParty** project in the sidebar, then the
+   **BlockParty** target → **Signing & Capabilities** tab.
 3. Check **Automatically manage signing** and pick your **Team**. If no team
    is listed, choose *Add an Account…* and sign in with your Apple ID —
    a free "Personal Team" will appear.
-4. Change the **Bundle Identifier** from `com.example.CubeCrush` to something
-   unique to you, e.g. `com.yourname.CubeCrush`.
+4. Change the **Bundle Identifier** from `com.example.BlockParty` to something
+   unique to you, e.g. `com.yourname.BlockParty`.
 5. Plug in the iPhone, unlock it, and tap **Trust** if prompted.
    Select the phone in Xcode's device menu (top toolbar) and press **Run** (⌘R).
 6. First launch will be blocked until you trust yourself as a developer on the
