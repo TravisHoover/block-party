@@ -28,12 +28,23 @@ on:
 jobs:
   upload:
     name: Build, sign, and upload
-    runs-on: macos-15
+    runs-on: macos-latest
     timeout-minutes: 45
 
     steps:
       - name: Check out source
         uses: actions/checkout@v4
+
+      # Apple periodically bumps the minimum SDK required for App Store
+      # submission (e.g. the iOS 26 SDK / Xcode 26 requirement introduced in
+      # 2026). Rather than pin a version here that will eventually go stale
+      # and produce a confusing "Validation failed: SDK version issue" late
+      # in the export step, always build with whatever the newest stable
+      # Xcode on the runner is.
+      - name: Select latest stable Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
 
       - name: Import distribution certificate into a temporary keychain
         env:
