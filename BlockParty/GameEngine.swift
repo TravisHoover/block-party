@@ -111,6 +111,18 @@ final class GameEngine: ObservableObject {
         return true
     }
 
+    /// Swaps the remaining tray pieces for fresh random ones (the optional
+    /// "easy mode" helper). Deliberately never triggers game over — the player
+    /// can shuffle again if the new pieces don't fit either.
+    func shuffleTray() {
+        guard !isGameOver else { return }
+        withAnimation(.spring(response: 0.35, dampingFraction: 0.7)) {
+            for i in 0..<tray.count where tray[i] != nil {
+                tray[i] = PieceLibrary.randomPiece()
+            }
+        }
+    }
+
     func newGame() {
         withAnimation(.easeOut(duration: 0.25)) {
             cells = Array(repeating: nil, count: Self.cellCount)

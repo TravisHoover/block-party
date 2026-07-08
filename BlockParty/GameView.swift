@@ -2,13 +2,15 @@ import SwiftUI
 
 struct GameView: View {
     @StateObject private var engine = GameEngine()
+    @AppStorage("shuffleEnabled") private var shuffleEnabled = false
 
     /// Which tray slot is being dragged, if any.
     @State private var dragIndex: Int?
-    /// Finger location in the "game" coordinate space.
+    /// Finger location in global (screen) coordinates.
     @State private var dragLocation: CGPoint = .zero
-    /// The board grid's frame in the "game" coordinate space.
+    /// The board grid's frame in global (screen) coordinates.
     @State private var boardFrame: CGRect = .zero
+    @State private var showSettings = false
 
     /// How far the dragged piece floats above the finger, so it isn't hidden by it.
     private let liftOffset: CGFloat = 45
@@ -17,6 +19,7 @@ struct GameView: View {
         GeometryReader { proxy in
             let boardSide = min(proxy.size.width - 32, 440)
             let cellSize = (boardSide - 12) / CGFloat(GameEngine.size)
+            let rootOrigin = proxy.frame(in: .global).origin
 
             ZStack {
                 LinearGradient(colors: [Color(red: 0.33, green: 0.20, blue: 0.62),
@@ -29,7 +32,8 @@ struct GameView: View {
                     eventBanner
                     BoardView(engine: engine,
                               cellSize: cellSize,
-                              preview: placementPreview(cellSize: cellSize))
+                              preview: placementPreview(cellSize: cellSize),
+                              gridFrame: $boardFrame)
                     Spacer(minLength: 10)
                     trayArea(cellSize: cellSize)
                     Spacer(minLength: 4)
@@ -39,7 +43,9 @@ struct GameView: View {
 
                 if let piece = floatingPiece {
                     PieceView(piece: piece, cellSize: cellSize)
-                        .position(floatingCenter(for: piece, cellSize: cellSize))
+                        .position(x: dragLocation.x - rootOrigin.x,
+                                  y: dragLocation.y - CGFloat(piece.rowCount) * cellSize / 2
+                                      - liftOffset - rootOrigin.y)
                         .allowsHitTesting(false)
                         .shadow(color: .black.opacity(0.35), radius: 10, y: 8)
                 }
@@ -49,8 +55,9 @@ struct GameView: View {
                         .transition(.opacity)
                 }
             }
-            .onPreferenceChange(BoardFrameKey.self) { boardFrame = $0 }
-            .coordinateSpace(name: "game")
+            .sheet(isPresented: $showSettings) {
+                SettingsSheet { engine.newGame() }
+            }
         }
     }
 
@@ -76,10 +83,22 @@ struct GameView: View {
                     .padding(.vertical, 7)
                     .background(Capsule().fill(.white.opacity(0.12)))
                 Spacer()
+                if shuffleEnabled {
+                    Button {
+                        Haptics.pickUp()
+                        engine.shuffleTray()
+                    } label: {
+                        Image(systemName: "shuffle")
+                            .font(.headline)
+                            .foregroundStyle(.white)
+                            .padding(10)
+                            .background(Circle().fill(.white.opacity(0.12)))
+                    }
+                }
                 Button {
-                    engine.newGame()
+                    showSettings = true
                 } label: {
-                    Image(systemName: "arrow.counterclockwise")
+                    Image(systemName: "gearshape.fill")
                         .font(.headline)
                         .foregroundStyle(.white)
                         .padding(10)
@@ -136,25 +155,36 @@ struct GameView: View {
         return engine.tray[dragIndex]
     }
 
-    /// Center of the floating piece: lifted above the finger so it stays visible.
-    private func floatingCenter(for piece: Piece, cellSize: CGFloat) -> CGPoint {
-        let height = CGFloat(piece.rowCount) * cellSize
-        return CGPoint(x: dragLocation.x,
-                       y: dragLocation.y - height / 2 - liftOffset)
-    }
-
-    /// The board cell the floating piece's top-left block is over, if placement is legal.
+    /// Finds the best legal cell for the floating piece, with a little magnetism:
+    /// the nearest valid cell within about one cell of the piece's position wins.
     private func dropTarget(cellSize: CGFloat) -> (piece: Piece, origin: GridPoint)? {
-        guard let piece = floatingPiece, boardFrame.width > 0 else { return nil }
+        guard let piece = floatingPiece, boardFrame.width > 0, cellSize > 0 else { return nil }
         let width = CGFloat(piece.colCount) * cellSize
         let height = CGFloat(piece.rowCount) * cellSize
+        // Top-left corner of the piece as drawn on screen (lifted above the finger).
         let topLeft = CGPoint(x: dragLocation.x - width / 2,
                               y: dragLocation.y - height - liftOffset)
-        let col = Int(round((topLeft.x - boardFrame.minX) / cellSize))
-        let row = Int(round((topLeft.y - boardFrame.minY) / cellSize))
-        let origin = GridPoint(row: row, col: col)
-        guard engine.canPlace(piece, at: origin) else { return nil }
-        return (piece, origin)
+        // Convert to grid units using the measured on-screen cell size, so the
+        // math can never drift from what is actually rendered.
+        let measuredCell = boardFrame.width / CGFloat(GameEngine.size)
+        let exactCol = (topLeft.x - boardFrame.minX) / measuredCell
+        let exactRow = (topLeft.y - boardFrame.minY) / measuredCell
+
+        var best: GridPoint?
+        var bestDistance: CGFloat = 0.95
+        for row in Int(exactRow.rounded(.down))...Int(exactRow.rounded(.up)) {
+            for col in Int(exactCol.rounded(.down))...Int(exactCol.rounded(.up)) {
+                let origin = GridPoint(row: row, col: col)
+                guard engine.canPlace(piece, at: origin) else { continue }
+                let distance = hypot(exactRow - CGFloat(row), exactCol - CGFloat(col))
+                if distance < bestDistance {
+                    bestDistance = distance
+                    best = origin
+                }
+            }
+        }
+        guard let best else { return nil }
+        return (piece, best)
     }
 
     private func placementPreview(cellSize: CGFloat) -> PlacementPreview? {
@@ -169,7 +199,7 @@ struct GameView: View {
     }
 
     private func dragGesture(for i: Int, cellSize: CGFloat) -> some Gesture {
-        DragGesture(minimumDistance: 0, coordinateSpace: .named("game"))
+        DragGesture(minimumDistance: 0, coordinateSpace: .global)
             .onChanged { value in
                 guard engine.tray[i] != nil, !engine.isGameOver else { return }
                 if dragIndex == nil { Haptics.pickUp() }
@@ -188,6 +218,40 @@ struct GameView: View {
                     }
                 }
             }
+    }
+}
+
+// MARK: - Settings
+
+struct SettingsSheet: View {
+    @AppStorage("shuffleEnabled") private var shuffleEnabled = false
+    @Environment(\.dismiss) private var dismiss
+    let onRestart: () -> Void
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section {
+                    Toggle("Shuffle button", isOn: $shuffleEnabled)
+                } footer: {
+                    Text("Adds a button that swaps the current pieces for new ones. Makes the game easier.")
+                }
+                Section {
+                    Button("Restart Game", role: .destructive) {
+                        onRestart()
+                        dismiss()
+                    }
+                }
+            }
+            .navigationTitle("Settings")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") { dismiss() }
+                }
+            }
+        }
+        .presentationDetents([.medium])
     }
 }
 
