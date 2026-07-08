@@ -90,9 +90,14 @@ The `Release to App Store Connect` workflow needs six repository secrets
 | `APPLE_TEAM_ID` | 10-character ID shown at developer.apple.com → Membership |
 | `ASC_KEY_ID` | App Store Connect → Users and Access → Integrations → App Store Connect API → Team Keys → Generate (role: **App Manager**) |
 | `ASC_ISSUER_ID` | Shown on the same API keys page |
-| `ASC_API_KEY_P8_BASE64` | Download the key's `.p8` file (one chance!), then `base64 -i AuthKey_XXXX.p8 \| pbcopy` |
-| `DIST_CERT_P12_BASE64` | In Xcode → Settings → Accounts → Manage Certificates → **+** → Apple Distribution. Then in Keychain Access, find "Apple Distribution: Your Name", right-click → Export as `.p12` with a password. `base64 -i cert.p12 \| pbcopy` |
+| `ASC_API_KEY_P8` | Download the key's `.p8` file (one chance!). It's a plain text file — open a terminal and run `cat AuthKey_XXXX.p8 \| pbcopy`, then paste directly into the secret's value box. **No base64 needed** — the file already starts with `-----BEGIN PRIVATE KEY-----`. Don't open it in a rich-text editor (like TextEdit's default mode) first, since that can silently corrupt the content. |
+| `DIST_CERT_P12_BASE64` | In Xcode → Settings → Accounts → Manage Certificates → **+** → Apple Distribution. Then in Keychain Access, find "Apple Distribution: Your Name", right-click → Export as `.p12` with a password. This file *is* binary, so it does need encoding: `base64 -i cert.p12 \| pbcopy`, then paste. |
 | `DIST_CERT_PASSWORD` | The password you chose when exporting the `.p12` |
+
+If you ever see xcodebuild fail with something like `Invalid authentication
+key credential` or `keyPathInvalid`, it means `ASC_API_KEY_P8` doesn't
+contain a valid key — usually a paste that got truncated or mangled. Re-copy
+it fresh with the `cat | pbcopy` command above and update the secret.
 
 ### Releasing
 

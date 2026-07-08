@@ -11,7 +11,8 @@ name: Release to App Store Connect
 #   APPLE_TEAM_ID          Your 10-character Apple Developer Team ID
 #   ASC_KEY_ID             App Store Connect API key ID
 #   ASC_ISSUER_ID          App Store Connect API issuer ID
-#   ASC_API_KEY_P8_BASE64  The .p8 API key file, base64-encoded
+#   ASC_API_KEY_P8         Full contents of the .p8 API key file (it's already
+#                          plain text -- paste it in as-is, no encoding needed)
 #   DIST_CERT_P12_BASE64   Apple Distribution certificate (.p12), base64-encoded
 #   DIST_CERT_PASSWORD     Password chosen when exporting the .p12
 #
@@ -54,10 +55,16 @@ jobs:
 
       - name: Write App Store Connect API key
         env:
-          ASC_API_KEY_P8_BASE64: ${{ secrets.ASC_API_KEY_P8_BASE64 }}
+          ASC_API_KEY_P8: ${{ secrets.ASC_API_KEY_P8 }}
         run: |
           mkdir -p "$RUNNER_TEMP/keys"
-          echo -n "$ASC_API_KEY_P8_BASE64" | base64 --decode > "$RUNNER_TEMP/keys/AuthKey.p8"
+          printf '%s' "$ASC_API_KEY_P8" > "$RUNNER_TEMP/keys/AuthKey.p8"
+          # Fail fast with a clear message instead of a cryptic xcodebuild
+          # keyPathInvalid error if the secret is missing or malformed.
+          grep -q "BEGIN PRIVATE KEY" "$RUNNER_TEMP/keys/AuthKey.p8" || {
+            echo "::error::ASC_API_KEY_P8 does not look like a valid .p8 key (missing 'BEGIN PRIVATE KEY'). Check the secret contains the full, unmodified file contents."
+            exit 1
+          }
 
       - name: Archive
         env:
