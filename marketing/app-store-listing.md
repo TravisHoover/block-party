@@ -67,11 +67,17 @@ Character limits are noted where Apple enforces them.
 
 | File | Slot | Pixels |
 | --- | --- | --- |
-| `iphone-6.9-1-gameplay.png` | iPhone 6.9" Display | 1320 × 2868 |
-| `iphone-6.9-2-combo.png` | iPhone 6.9" Display | 1320 × 2868 |
-| `iphone-6.9-3-newbest.png` | iPhone 6.9" Display | 1320 × 2868 |
+| `iphone-6.5-1-gameplay.png` | iPhone 6.5" Display | 1284 × 2778 |
+| `iphone-6.5-2-combo.png` | iPhone 6.5" Display | 1284 × 2778 |
+| `iphone-6.5-3-newbest.png` | iPhone 6.5" Display | 1284 × 2778 |
+| `iphone-6.9-1-gameplay.png` | iPhone 6.9" Display (if shown) | 1320 × 2868 |
+| `iphone-6.9-2-combo.png` | iPhone 6.9" Display (if shown) | 1320 × 2868 |
+| `iphone-6.9-3-newbest.png` | iPhone 6.9" Display (if shown) | 1320 × 2868 |
 | `ipad-13-1-gameplay.png` | iPad 13" Display | 2064 × 2752 |
 | `ipad-13-2-newbest.png` | iPad 13" Display | 2064 × 2752 |
+
+Which iPhone slot App Store Connect shows depends on the Xcode SDK the
+build was uploaded with — upload whichever set it asks for.
 
 Upload order = display order; put the combo shot second or first.
 Smaller devices reuse these automatically. The **app icon** uploads with
