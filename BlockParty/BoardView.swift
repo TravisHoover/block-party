@@ -30,6 +30,34 @@ struct BlockView: View {
     }
 }
 
+/// A small ring of dots that bursts outward from a clearing block and fades.
+private struct ClearSparkles: View {
+    let color: BlockColor
+    let size: CGFloat
+    /// True once the block starts shrinking away -- drives the burst.
+    let burst: Bool
+
+    private static let angles: [Double] = [15, 75, 135, 195, 255, 315]
+
+    var body: some View {
+        ZStack {
+            ForEach(Self.angles.indices, id: \.self) { i in
+                let radians = Self.angles[i] * .pi / 180
+                let distance = size * 0.8
+                Circle()
+                    .fill(color.base)
+                    .frame(width: size * 0.15, height: size * 0.15)
+                    .offset(x: burst ? cos(radians) * distance : 0,
+                            y: burst ? sin(radians) * distance : 0)
+                    .opacity(burst ? 0 : 1)
+                    .scaleEffect(burst ? 0.2 : 1)
+            }
+        }
+        .allowsHitTesting(false)
+        .animation(.easeOut(duration: 0.24), value: burst)
+    }
+}
+
 /// Renders a whole piece at a given cell size (used in the tray and while dragging).
 struct PieceView: View {
     let piece: Piece
@@ -82,12 +110,15 @@ struct BoardView: View {
             RoundedRectangle(cornerRadius: 18, style: .continuous)
                 .fill(Color.black.opacity(0.28))
         )
+        .scaleEffect(engine.comboPulse ? 1.035 : 1)
+        .animation(.spring(response: 0.18, dampingFraction: 0.35), value: engine.comboPulse)
     }
 
     @ViewBuilder
     private func cell(_ r: Int, _ c: Int) -> some View {
         let i = GameEngine.index(r, c)
         let color = engine.cells[i]
+        let isPopping = engine.poppingCells.contains(i)
         let isClearing = engine.clearingCells.contains(i)
         let wouldClear = preview?.clearIndices.contains(i) ?? false
         let ghostColor: BlockColor? = (preview?.cellIndices.contains(i) ?? false) ? preview?.piece.color : nil
@@ -98,10 +129,18 @@ struct BoardView: View {
                 .padding(1.5)
 
             if let color {
-                BlockView(color: color, size: cellSize - 3)
-                    .scaleEffect(isClearing ? 0.05 : 1)
-                    .opacity(isClearing ? 0 : 1)
-                    .animation(.easeIn(duration: 0.25), value: isClearing)
+                ZStack {
+                    BlockView(color: color, size: cellSize - 3)
+                        .scaleEffect(isClearing ? 0.05 : (isPopping ? 1.22 : 1))
+                        .brightness(isClearing ? 0.15 : (isPopping ? 0.55 : 0))
+                        .opacity(isClearing ? 0 : 1)
+                        .animation(.easeOut(duration: 0.09), value: isPopping)
+                        .animation(.easeIn(duration: 0.21), value: isClearing)
+
+                    if isPopping || isClearing {
+                        ClearSparkles(color: color, size: cellSize, burst: isClearing)
+                    }
+                }
             } else if let ghostColor {
                 RoundedRectangle(cornerRadius: cellSize * 0.22, style: .continuous)
                     .fill(ghostColor.base.opacity(0.4))

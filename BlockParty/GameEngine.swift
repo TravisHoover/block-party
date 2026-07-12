@@ -15,8 +15,12 @@ final class GameEngine: ObservableObject {
     @Published private(set) var isGameOver = false
     /// Consecutive placements that cleared at least one line.
     @Published private(set) var streak = 0
+    /// Cells in the brief "punch" flash right before they shrink away.
+    @Published private(set) var poppingCells: Set<Int> = []
     /// Cells mid clear-animation: still occupied, but shrinking away on screen.
     @Published private(set) var clearingCells: Set<Int> = []
+    /// Briefly true on a 2+ line streak, for a whole-board "thump".
+    @Published private(set) var comboPulse = false
     /// Transient "+120 Combo x2!" message shown above the board.
     @Published private(set) var eventText: String?
 
@@ -25,6 +29,9 @@ final class GameEngine: ObservableObject {
 
     private var eventToken = 0
     private static let highScoreKey = "highScore"
+    /// Quick bright flash before the shrink -- keep this snappy.
+    private static let popDuration: TimeInterval = 0.09
+    private static let clearDuration: TimeInterval = 0.21
 
     init() {
         let saved = UserDefaults.standard.integer(forKey: Self.highScoreKey)
@@ -90,9 +97,21 @@ final class GameEngine: ObservableObject {
             showEvent(lineCount: lineCount, gained: gained)
             Haptics.clear()
 
+            if streak >= 2 {
+                comboPulse = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
+                    self?.comboPulse = false
+                }
+            }
+
             let toClear = cellIndices(rows: lines.rows, cols: lines.cols)
-            clearingCells = toClear
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.28) { [weak self] in
+            poppingCells = toClear
+            DispatchQueue.main.asyncAfter(deadline: .now() + Self.popDuration) { [weak self] in
+                guard let self else { return }
+                self.poppingCells = []
+                self.clearingCells = toClear
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + Self.popDuration + Self.clearDuration) { [weak self] in
                 guard let self else { return }
                 for i in toClear { self.cells[i] = nil }
                 self.clearingCells = []
@@ -129,7 +148,9 @@ final class GameEngine: ObservableObject {
             score = 0
             streak = 0
             isGameOver = false
+            poppingCells = []
             clearingCells = []
+            comboPulse = false
             eventText = nil
             previousBest = highScore
             refillTray()
