@@ -29,15 +29,31 @@ final class GameEngine: ObservableObject {
 
     private var eventToken = 0
     private static let highScoreKey = "highScore"
+    private static let savedGameKey = "savedGame"
     /// Quick bright flash before the shrink -- keep this snappy.
     private static let popDuration: TimeInterval = 0.09
     private static let clearDuration: TimeInterval = 0.21
+
+    /// On-disk snapshot of a game in progress, restored on next launch.
+    private struct SavedGame: Codable {
+        struct SavedPiece: Codable {
+            var blocks: [GridPoint]
+            var color: BlockColor
+        }
+        /// One entry per cell: a BlockColor raw value, or -1 for empty.
+        var cells: [Int]
+        var tray: [SavedPiece?]
+        var score: Int
+        var streak: Int
+    }
 
     init() {
         let saved = UserDefaults.standard.integer(forKey: Self.highScoreKey)
         highScore = saved
         previousBest = saved
-        refillTray()
+        if !restoreSavedGame() {
+            refillTray()
+        }
     }
 
     static func index(_ row: Int, _ col: Int) -> Int {
@@ -127,6 +143,7 @@ final class GameEngine: ObservableObject {
             highScore = score
             UserDefaults.standard.set(score, forKey: Self.highScoreKey)
         }
+        saveState()
         return true
     }
 
@@ -140,6 +157,7 @@ final class GameEngine: ObservableObject {
                 tray[i] = PieceLibrary.randomPiece()
             }
         }
+        saveState()
     }
 
     func newGame() {
@@ -155,9 +173,46 @@ final class GameEngine: ObservableObject {
             previousBest = highScore
             refillTray()
         }
+        saveState()
     }
 
     // MARK: - Private helpers
+
+    /// Returns true if a valid in-progress game was restored.
+    private func restoreSavedGame() -> Bool {
+        guard let data = UserDefaults.standard.data(forKey: Self.savedGameKey),
+              let saved = try? JSONDecoder().decode(SavedGame.self, from: data),
+              saved.cells.count == Self.cellCount,
+              saved.tray.count == tray.count else { return false }
+        cells = saved.cells.map { $0 >= 0 ? BlockColor(rawValue: $0) : nil }
+        tray = saved.tray.map { piece in
+            piece.map { Piece(blocks: $0.blocks, color: $0.color) }
+        }
+        score = saved.score
+        streak = saved.streak
+        if tray.allSatisfy({ $0 == nil }) {
+            refillTray()
+        }
+        return true
+    }
+
+    private func saveState() {
+        guard !isGameOver else {
+            UserDefaults.standard.removeObject(forKey: Self.savedGameKey)
+            return
+        }
+        let saved = SavedGame(
+            cells: cells.map { $0?.rawValue ?? -1 },
+            tray: tray.map { piece in
+                piece.map { SavedGame.SavedPiece(blocks: $0.blocks, color: $0.color) }
+            },
+            score: score,
+            streak: streak
+        )
+        if let data = try? JSONEncoder().encode(saved) {
+            UserDefaults.standard.set(data, forKey: Self.savedGameKey)
+        }
+    }
 
     private func refillTray() {
         for i in 0..<tray.count {
@@ -178,6 +233,7 @@ final class GameEngine: ObservableObject {
             }
             Haptics.gameOver()
         }
+        saveState()
     }
 
     private func fullLines(in grid: [BlockColor?]) -> (rows: [Int], cols: [Int]) {
