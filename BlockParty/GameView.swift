@@ -202,7 +202,10 @@ struct GameView: View {
         DragGesture(minimumDistance: 0, coordinateSpace: .global)
             .onChanged { value in
                 guard engine.tray[i] != nil, !engine.isGameOver else { return }
-                if dragIndex == nil { Haptics.pickUp() }
+                if dragIndex == nil {
+                    Haptics.pickUp()
+                    Sounds.pickUp()
+                }
                 dragIndex = i
                 dragLocation = value.location
             }
@@ -225,12 +228,16 @@ struct GameView: View {
 
 struct SettingsSheet: View {
     @AppStorage("shuffleEnabled") private var shuffleEnabled = false
+    @AppStorage("soundEnabled") private var soundEnabled = true
     @Environment(\.dismiss) private var dismiss
     let onRestart: () -> Void
 
     var body: some View {
         NavigationStack {
             Form {
+                Section {
+                    Toggle("Sounds", isOn: $soundEnabled)
+                }
                 Section {
                     Toggle("Shuffle button", isOn: $shuffleEnabled)
                 } footer: {

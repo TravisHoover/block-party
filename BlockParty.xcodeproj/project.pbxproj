@@ -14,6 +14,7 @@
 		B0000000000000000000B005 /* BoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000A005 /* BoardView.swift */; };
 		B0000000000000000000B006 /* GameOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000A006 /* GameOverView.swift */; };
 		B0000000000000000000B007 /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000A007 /* Haptics.swift */; };
+		B0000000000000000000B010 /* Sounds.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000A010 /* Sounds.swift */; };
 		B0000000000000000000B008 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F0000000000000000000A008 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
@@ -25,6 +26,7 @@
 		F0000000000000000000A005 /* BoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardView.swift; sourceTree = "<group>"; };
 		F0000000000000000000A006 /* GameOverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverView.swift; sourceTree = "<group>"; };
 		F0000000000000000000A007 /* Haptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
+		F0000000000000000000A010 /* Sounds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sounds.swift; sourceTree = "<group>"; };
 		F0000000000000000000A008 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F0000000000000000000A009 /* BlockParty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BlockParty.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -58,6 +60,7 @@
 				F0000000000000000000A005 /* BoardView.swift */,
 				F0000000000000000000A006 /* GameOverView.swift */,
 				F0000000000000000000A007 /* Haptics.swift */,
+				F0000000000000000000A010 /* Sounds.swift */,
 				F0000000000000000000A008 /* Assets.xcassets */,
 			);
 			path = BlockParty;
@@ -147,6 +150,7 @@
 				B0000000000000000000B005 /* BoardView.swift in Sources */,
 				B0000000000000000000B006 /* GameOverView.swift in Sources */,
 				B0000000000000000000B007 /* Haptics.swift in Sources */,
+				B0000000000000000000B010 /* Sounds.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

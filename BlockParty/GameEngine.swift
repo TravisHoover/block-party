@@ -112,6 +112,11 @@ final class GameEngine: ObservableObject {
             score += gained
             showEvent(lineCount: lineCount, gained: gained)
             Haptics.clear()
+            if streak >= 2 {
+                Sounds.combo()
+            } else {
+                Sounds.clear()
+            }
 
             if streak >= 2 {
                 comboPulse = true
@@ -136,6 +141,7 @@ final class GameEngine: ObservableObject {
         } else {
             streak = 0
             Haptics.place()
+            Sounds.place()
             finishTurn()
         }
 
@@ -232,6 +238,11 @@ final class GameEngine: ObservableObject {
                 isGameOver = true
             }
             Haptics.gameOver()
+            if score > previousBest && score > 0 {
+                Sounds.newBest()
+            } else {
+                Sounds.gameOver()
+            }
         }
         saveState()
     }
