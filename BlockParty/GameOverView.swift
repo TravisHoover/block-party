@@ -3,13 +3,14 @@ import SwiftUI
 /// One falling, tumbling confetti rectangle. Each piece loops its fall
 /// forever with its own speed, delay, drift, and spin.
 private struct ConfettiPieceView: View {
+    @Environment(\.theme) private var theme
     let spec: ConfettiSpec
     let screenHeight: CGFloat
     @State private var falling = false
 
     var body: some View {
         RoundedRectangle(cornerRadius: 2)
-            .fill(spec.color.base)
+            .fill(theme.color(for: spec.color))
             .frame(width: spec.size, height: spec.size * 1.6)
             .rotationEffect(.degrees(falling ? spec.spin : 0))
             .rotation3DEffect(.degrees(falling ? spec.spin * 1.7 : 0), axis: (x: 1, y: 1, z: 0))
