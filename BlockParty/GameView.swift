@@ -3,6 +3,9 @@ import SwiftUI
 struct GameView: View {
     @StateObject private var engine = GameEngine()
     @AppStorage("shuffleEnabled") private var shuffleEnabled = false
+    @AppStorage("theme") private var themeName = Theme.classic.rawValue
+
+    private var theme: Theme { Theme(rawValue: themeName) ?? .classic }
 
     /// Which tray slot is being dragged, if any.
     @State private var dragIndex: Int?
@@ -22,8 +25,7 @@ struct GameView: View {
             let rootOrigin = proxy.frame(in: .global).origin
 
             ZStack {
-                LinearGradient(colors: [Color(red: 0.33, green: 0.20, blue: 0.62),
-                                        Color(red: 0.14, green: 0.12, blue: 0.35)],
+                LinearGradient(colors: theme.background,
                                startPoint: .top, endPoint: .bottom)
                     .ignoresSafeArea()
 
@@ -58,6 +60,7 @@ struct GameView: View {
             .sheet(isPresented: $showSettings) {
                 SettingsSheet { engine.newGame() }
             }
+            .environment(\.theme, theme)
         }
     }
 
@@ -202,7 +205,10 @@ struct GameView: View {
         DragGesture(minimumDistance: 0, coordinateSpace: .global)
             .onChanged { value in
                 guard engine.tray[i] != nil, !engine.isGameOver else { return }
-                if dragIndex == nil { Haptics.pickUp() }
+                if dragIndex == nil {
+                    Haptics.pickUp()
+                    Sounds.pickUp()
+                }
                 dragIndex = i
                 dragLocation = value.location
             }
@@ -225,12 +231,42 @@ struct GameView: View {
 
 struct SettingsSheet: View {
     @AppStorage("shuffleEnabled") private var shuffleEnabled = false
+    @AppStorage("soundEnabled") private var soundEnabled = true
+    @AppStorage("theme") private var themeName = Theme.classic.rawValue
     @Environment(\.dismiss) private var dismiss
     let onRestart: () -> Void
 
     var body: some View {
         NavigationStack {
             Form {
+                Section {
+                    Toggle("Sounds", isOn: $soundEnabled)
+                }
+                Section("Colors") {
+                    ForEach(Theme.allCases) { theme in
+                        Button {
+                            themeName = theme.rawValue
+                        } label: {
+                            HStack(spacing: 12) {
+                                HStack(spacing: 4) {
+                                    ForEach([BlockColor.red, .yellow, .green, .blue], id: \.self) { block in
+                                        Circle()
+                                            .fill(theme.color(for: block))
+                                            .frame(width: 14, height: 14)
+                                    }
+                                }
+                                Text(theme.displayName)
+                                    .foregroundStyle(.primary)
+                                Spacer()
+                                if themeName == theme.rawValue {
+                                    Image(systemName: "checkmark")
+                                        .fontWeight(.semibold)
+                                        .foregroundStyle(.tint)
+                                }
+                            }
+                        }
+                    }
+                }
                 Section {
                     Toggle("Shuffle button", isOn: $shuffleEnabled)
                 } footer: {

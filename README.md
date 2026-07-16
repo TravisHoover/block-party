@@ -12,9 +12,12 @@ access — ever.**
 - Clear multiple lines at once — or on back-to-back moves — for combo bonuses.
 - The game ends when none of your pieces fit anywhere. Your best score is
   saved on the device.
-- The gear button opens settings: restart the game, or turn on the optional
+- The gear button opens settings: pick a **color theme** (Classic, Ocean,
+  Candy, Pastel), toggle **sounds**, restart the game, or turn on the optional
   **shuffle button** (off by default), which swaps the current pieces for new
   ones — handy for younger kids, but it makes the game much easier.
+- Your game in progress is saved automatically — closing the app and coming
+  back later picks up right where you left off.
 
 ## Requirements
 
