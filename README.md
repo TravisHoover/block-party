@@ -1,6 +1,7 @@
 # Block Party 🟥🟧🟩🟦
 
-An ad-free, kid-friendly iOS block puzzle game in the style of Block Blast.
+A colorful, ad-free block puzzle game for kids and families: drag pieces
+onto an 8×8 board, clear rows and columns, chase your best score.
 Built with SwiftUI. **No ads, no in-app purchases, no tracking, no internet
 access — ever.**
 
