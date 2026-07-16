@@ -83,6 +83,10 @@ Upload order = display order; put the combo shot second or first.
 Smaller devices reuse these automatically. The **app icon** uploads with
 the build itself — nothing to provide separately.
 
+The screenshots deliberately show three different color themes (Candy,
+Ocean, Classic) and the confetti celebration — features distinctive to
+this app.
+
 ## App Information
 
 | Field | Value |
@@ -115,6 +119,40 @@ the build itself — nothing to provide separately.
 | Build | pick the build uploaded by the release workflow |
 | Export compliance | Already answered by the build (`ITSAppUsesNonExemptEncryption = NO`) |
 | Sign-in required for review | No |
-| Review notes | "Fully offline puzzle game. No account, no ads, no purchases, no data collection. No special setup needed." |
+| Review notes | "Fully offline, original puzzle game. All code, artwork, app icon, screenshots, and sound effects are original creations made for this app. No account, no ads, no purchases, no data collection. No special setup needed." |
 | Contact info | Your name, email, and phone (only App Review sees this) |
 | Release option | Automatically release after approval (or Manual if you want to press the button) |
+
+## Resubmitting after a 4.1(a) "Copycats" rejection
+
+Guideline 4.1(a) rejections cite metadata that references another app.
+Before resubmitting, check **every** text field in App Store Connect and
+remove any mention of, or comparison to, other games — including "like X,"
+"alternative to X," or "X without ads":
+
+- [ ] App name and subtitle
+- [ ] Description (replace entirely with the description in this document —
+      it describes the game only on its own terms)
+- [ ] Promotional text
+- [ ] Keywords (no other game's name; the keyword list in this document is
+      clean)
+- [ ] Screenshot captions, if any
+- [ ] App Review notes and any Resolution Center replies
+- [ ] The support URL's page content — this repo's README is what reviewers
+      see, so keep it free of comparisons too
+
+Then, in the same submission:
+
+1. Upload a **new build** (new build number) that includes the redesigned
+   icon — the reviewed icon is cached with the old build.
+2. Replace all screenshots with the current set in `marketing/screenshots/`
+   (they show this app's distinctive themes and confetti).
+3. Reply in the Resolution Center rather than silently resubmitting.
+   Something like:
+
+   > "Thank you for the review. We have removed all references to other
+   > apps from the app's metadata, replaced the screenshots, and redesigned
+   > the app icon. [App name] is an original game — all code, artwork, and
+   > sounds were created for this app, it contains no third-party content,
+   > and it has no ads, purchases, or data collection. Please let us know
+   > if anything else needs attention."
