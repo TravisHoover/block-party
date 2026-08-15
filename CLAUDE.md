@@ -107,9 +107,13 @@ and got most of it wrong — see "Corrections" below._
 
 ## App Store status — verified in App Store Connect on 2026-08-15
 
-App: **Block Party! Kids Puzzle**, Apple ID `6788764186`. Store status is
-**Rejected**, not "in review". One submission exists (`a7849883`), opened
-2026-07-16, now showing **Unresolved Issues**.
+App: **Block Party! Kids Puzzle**, Apple ID `6788764186`. Status is
+**1.0 (build 5) — Waiting for Review**, resubmitted 2026-08-15 at 5:08 PM after
+a month stuck in Rejected. Submission `a7849883`.
+
+What unstuck it: real build-5 screenshots replacing the inaccurate mocks, then
+the two-click `Update Review` → `Resubmit to App Review` sequence below. No new
+binary was uploaded.
 
 The whole review history is one argument about whether this is a children's
 app, and it is now settled — correctly:
@@ -139,40 +143,59 @@ high score, the sound toggle, and the saved board. App Privacy is "Data Not
 Collected"; the privacy policy URL is live and public and has a children's
 section.
 
-## The one thing actually blocking release
+## Getting a rejected version back into the queue — the two-step dance
 
-`Resubmit to App Review` on the submission page is **greyed out**, and the app
-has sat untouched for a week because of it. Replying to a 2.1 message does
-**not** put the app back in the queue — the earlier note claimed it did, which
-is what cost that week.
+Replying to a 2.1 message does **not** put the app back in the queue. Neither
+does uploading new screenshots. Clearing a Rejected status takes two clicks in
+two different places, and `Resubmit to App Review` stays greyed out until the
+first one is done:
 
-Best read of the disabled button (inferred, not stated by Apple): **nothing has
-changed since the rejection**, so there is nothing to resubmit. `Update Review`
-on the version page *is* enabled. Make a real edit to the version, save it, and
-resubmission should unlock. No new build is needed and none should be uploaded —
-build 5 is what Apple has been reviewing.
+1. **App version page → `Update Review`.** Edit the version, Save, then click
+   this. It clears the item's Rejected status inside the submission.
+2. **Submission page → `Resubmit to App Review`.** Only becomes enabled once no
+   item is still Rejected.
+
+That is Apple's documented flow, in
+[Manage a submission with unresolved issues](https://developer.apple.com/help/app-store-connect/manage-submissions-to-app-review/manage-a-submission-with-unresolved-issues/).
+Read the docs rather than inferring from which buttons look clickable — two
+separate guesses at why `Resubmit` was disabled (nothing-had-changed, then the
+DSA trader status) were both wrong and cost a round trip each.
+
+**No new build is needed to clear a metadata rejection**, and none should be
+uploaded — a new binary restarts the review queue. Build 5 stayed attached
+throughout.
+
+**Unrelated but genuinely required:** the DSA trader declaration, under
+**Business** in the top nav (`/business`) → "Complete Compliance Requirements".
+It is account-level, not app-level, despite the `Set Up` link on App Information
+pointing there. It did not unblock resubmission, but it is mandatory for EU
+distribution.
 
 ## Outstanding
 
-1. **Upload the new screenshots** — done locally, still to upload. Real build-5
-   captures now live in `marketing/screenshots/`. Upload the three
-   **`iphone-6.5-*`** files and the two `ipad-13-*` files. The old set was HTML
-   mocks showing confetti and color themes that build 5 doesn't have — a real
-   Guideline 2.3.3 problem, and metadata gets closer scrutiny on a Made for
-   Kids app.
+1. **Wait for the 1.0 review.** Nothing to do until Apple responds.
 
-   **Use the 6.5" files, not the 6.9" ones.** Build 5 was uploaded with an
-   older Xcode SDK, so its listing offers only a 6.5" slot and rejects
-   1320 × 2868 with "The dimensions of one or more screenshots are wrong". The
-   6.9" set is kept for a future build uploaded from a current SDK.
-2. **Then resubmit** and reply noting the Made for Kids designation is set and
-   the Aug 8 answers stand. Uploading the screenshots is also the edit expected
-   to un-grey `Resubmit to App Review` — if it stays disabled afterwards, that
-   inference was wrong and the real cause needs digging out.
-3. **1.1 = the polish pack, already on `main`.** `MARKETING_VERSION` is still
+   **The listing takes the 6.5" files, not the 6.9" ones.** Build 5 was
+   uploaded with an older Xcode SDK, so its listing offers only a 6.5" slot and
+   rejects 1320 × 2868 with "The dimensions of one or more screenshots are
+   wrong". The 6.9" set is kept for a future build from a current SDK.
+2. **1.1 = the polish pack, already on `main`.** `MARKETING_VERSION` is still
    `1.0` and no tags exist, so nothing has shipped. Don't tag until 1.0 is
    approved; ship 1.1 with themed screenshots so binary and listing match.
-4. **Bundle ID is `com.example.BlockParty`** — already registered under that
+
+   **The polish pack has never been verified on a device or simulator** — it
+   went from a cloud session straight into `main`. Confetti and the high-score
+   fix have been seen working; save & resume across a force-quit, the sound
+   effects and mute toggle, theme switching mid-game, and `BlockColor`
+   round-tripping through a saved game have **not**. Do that before tagging.
+
+   Known bug to fix in 1.1: **"New Best!" can never appear after resuming a
+   saved game.** `previousBest` is set from `highScore` at launch, but
+   `highScore` is persisted continuously as you play, so on relaunch
+   `previousBest` already includes the in-progress score and
+   `score > previousBest` is never true. Needs `previousBest` persisted
+   separately rather than derived.
+3. **Bundle ID is `com.example.BlockParty`** — already registered under that
    name, so it stays, but it looks like a placeholder.
 
 ## Corrections to the previous handoff note
