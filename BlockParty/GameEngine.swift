@@ -100,7 +100,7 @@ final class GameEngine: ObservableObject {
                 cells[Self.index(origin.row + block.row, origin.col + block.col)] = piece.color
             }
             tray[trayIndex] = nil
-            score += piece.blocks.count
+            award(piece.blocks.count)
         }
 
         let lines = fullLines(in: cells)
@@ -109,7 +109,7 @@ final class GameEngine: ObservableObject {
         if lineCount > 0 {
             streak += 1
             let gained = 10 * lineCount * lineCount * streak
-            score += gained
+            award(gained)
             showEvent(lineCount: lineCount, gained: gained)
             Haptics.clear()
             if streak >= 2 {
@@ -145,10 +145,6 @@ final class GameEngine: ObservableObject {
             finishTurn()
         }
 
-        if score > highScore {
-            highScore = score
-            UserDefaults.standard.set(score, forKey: Self.highScoreKey)
-        }
         saveState()
         return true
     }
@@ -183,6 +179,20 @@ final class GameEngine: ObservableObject {
     }
 
     // MARK: - Private helpers
+
+    /// Adds points and keeps the high score in step with them. These must move
+    /// together: the game-over card shows score and best side by side, and the
+    /// score is raised inside a `withAnimation` block. Updating the high score
+    /// separately put it in its own transaction, so SwiftUI could render the
+    /// two out of step and the card would claim a "Best" *lower* than the score
+    /// right above it — by exactly the last piece's block count.
+    private func award(_ points: Int) {
+        score += points
+        if score > highScore {
+            highScore = score
+            UserDefaults.standard.set(score, forKey: Self.highScoreKey)
+        }
+    }
 
     /// Returns true if a valid in-progress game was restored.
     private func restoreSavedGame() -> Bool {
