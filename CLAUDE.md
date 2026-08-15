@@ -65,9 +65,16 @@ screenshots showed features the submitted binary did not have, which put the
 listing at risk under Guideline 2.3.3. They have been replaced with genuine
 simulator captures. Never recreate the mock. To capture: check out the exact
 commit being shipped into a scratch worktree, build it, install to a simulator
-of the right size (iPhone 17 Pro Max = 1320×2868, iPad Pro 13-inch = 2064×2752)
-and drive it with the simulator tooling; `xcrun simctl io <udid> screenshot`
-writes a correctly-sized PNG.
+of the right size and drive it with the simulator tooling; `xcrun simctl io
+<udid> screenshot` writes a correctly-sized PNG.
+
+**Which screenshot slot App Store Connect offers depends on the Xcode SDK the
+build was uploaded with.** Build 5 predates the current SDK, so its listing
+accepts only **6.5"** (1242×2688 or 1284×2778) and rejects 6.9" outright. Don't
+assume the newest size is wanted — look at the slot the listing actually shows.
+Sizes: iPhone 11 Pro Max = 1242×2688, iPhone 17 Pro Max = 1320×2868, iPad Pro
+13-inch = 2064×2752. Older device types are no longer created by default but
+still exist; make one with `xcrun simctl create <name> <deviceType> <runtime>`.
 
 Placement is scriptable — `GameView` computes the drop from
 `topLeft = (touchX - width/2, touchY - height - liftOffset)` with
@@ -148,12 +155,16 @@ build 5 is what Apple has been reviewing.
 ## Outstanding
 
 1. **Upload the new screenshots** — done locally, still to upload. Real build-5
-   captures now live in `marketing/screenshots/` (see that section of
-   `marketing/app-store-listing.md`). In App Store Connect: **delete the stale
-   6.5" set** and upload the three 6.9" files plus the two iPad files. The old
-   set was HTML mocks showing confetti and color themes that build 5 doesn't
-   have — a real Guideline 2.3.3 problem, and metadata gets closer scrutiny on
-   a Made for Kids app.
+   captures now live in `marketing/screenshots/`. Upload the three
+   **`iphone-6.5-*`** files and the two `ipad-13-*` files. The old set was HTML
+   mocks showing confetti and color themes that build 5 doesn't have — a real
+   Guideline 2.3.3 problem, and metadata gets closer scrutiny on a Made for
+   Kids app.
+
+   **Use the 6.5" files, not the 6.9" ones.** Build 5 was uploaded with an
+   older Xcode SDK, so its listing offers only a 6.5" slot and rejects
+   1320 × 2868 with "The dimensions of one or more screenshots are wrong". The
+   6.9" set is kept for a future build uploaded from a current SDK.
 2. **Then resubmit** and reply noting the Made for Kids designation is set and
    the Aug 8 answers stand. Uploading the screenshots is also the edit expected
    to un-grey `Resubmit to App Review` — if it stays disabled afterwards, that
