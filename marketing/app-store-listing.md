@@ -123,6 +123,62 @@ this app.
 | Contact info | Your name, email, and phone (only App Review sees this) |
 | Release option | Automatically release after approval (or Manual if you want to press the button) |
 
+## Guideline 2.1 reply (kids / privacy questions)
+
+Apple asks these four questions when an app looks child-directed (4+ rating,
+Family category, "kids" keywords). Paste this into the Resolution Center.
+
+**Accuracy check before sending:** the framework list below is correct for a
+build without the polish pack. Once PR #8 ships, sound effects add
+**AVFoundation**, and the stored-data answer becomes "high score, settings,
+and saved game progress." Everything else stays true.
+
+> Thank you for the review. Block Party does not collect any data. It is a
+> fully offline, single-player puzzle game with no accounts, no ads, and no
+> analytics. Answering each question directly:
+>
+> 1. Does the app include third-party analytics?
+> No. The app contains no analytics of any kind, third-party or otherwise. No
+> usage data, events, or telemetry are recorded or transmitted.
+>
+> 2. Does the app include third-party advertising?
+> No. The app contains no advertising, no ad networks, and no ad SDKs. There
+> is no promotional content of any kind in the app.
+>
+> 3. Will the data be shared with any third parties?
+> No. No data is collected, so no data is shared with anyone. The app has no
+> server component and makes no network connections.
+>
+> 4. Is the app collecting any user or device data for purposes beyond
+> third-party analytics or advertising?
+> No. The app does not collect user or device data for any purpose. The only
+> information stored is the player's high score and their in-app settings
+> preference, saved locally on the device using Apple's standard UserDefaults
+> API. This data never leaves the device, is not transmitted to us or anyone
+> else, is not linked to any identity, and is deleted when the user deletes
+> the app.
+>
+> Supporting details:
+>
+> - The app contains no third-party SDKs, frameworks, or libraries. It links
+>   only Apple's own SwiftUI and UIKit frameworks.
+> - The app contains no networking code whatsoever (no URLSession, no sockets,
+>   no web views) and requests no network entitlements. It runs identically in
+>   Airplane Mode.
+> - The app does not access the advertising identifier (IDFA) and contains no
+>   App Tracking Transparency prompt, because there is nothing to track.
+> - The app requests no permissions and accesses no device data: no location,
+>   contacts, photos, camera, microphone, or device identifiers.
+> - There are no accounts, logins, chat, user-generated content, or links that
+>   leave the app.
+> - Our App Privacy responses in App Store Connect are set to "Data Not
+>   Collected," which accurately reflects the above.
+>
+> Please let us know if any further detail would be helpful.
+
+A 2.1 hold is cleared by **replying**, not by uploading a new build — a new
+binary restarts the review queue.
+
 ## Resubmitting after a 4.1(a) "Copycats" rejection
 
 Guideline 4.1(a) rejections cite metadata that references another app.
