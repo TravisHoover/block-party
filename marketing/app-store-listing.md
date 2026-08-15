@@ -128,10 +128,11 @@ this app.
 Apple asks these four questions when an app looks child-directed (4+ rating,
 Family category, "kids" keywords). Paste this into the Resolution Center.
 
-**Accuracy check before sending:** the framework list below is correct for a
-build without the polish pack. Once PR #8 ships, sound effects add
-**AVFoundation**, and the stored-data answer becomes "high score, settings,
-and saved game progress." Everything else stays true.
+**Accuracy check:** the text below is correct for **build 5**, which is the
+binary Apple has been reviewing, so it was accurate when sent. It is now stale
+for `main`: the polish pack has merged, so sound effects add **AVFoundation**
+and the stored-data answer becomes "high score, settings, and saved game
+progress." Update both before quoting this in any 1.1 correspondence.
 
 > Thank you for the review. Block Party does not collect any data. It is a
 > fully offline, single-player puzzle game with no accounts, no ads, and no
@@ -176,8 +177,13 @@ and saved game progress." Everything else stays true.
 >
 > Please let us know if any further detail would be helpful.
 
-A 2.1 hold is cleared by **replying**, not by uploading a new build — a new
-binary restarts the review queue.
+**This reply was sent on 2026-08-08.** Don't send it again; it's kept here as
+the record of what Apple was told.
+
+Replying to a 2.1 message does **not** by itself put the app back in the review
+queue. It sat Rejected and idle for a week after the reply went out. You still
+have to **resubmit** — but resubmit the *existing* build, since a new binary
+restarts the queue.
 
 ## Resubmitting after a 4.1(a) "Copycats" rejection
 
