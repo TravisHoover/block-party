@@ -1,13 +1,14 @@
 import SwiftUI
 
 /// A position on the board (or an offset within a piece), in row/column units.
-struct GridPoint: Hashable {
+struct GridPoint: Hashable, Codable {
     var row: Int
     var col: Int
 }
 
 /// The palette used for blocks. Bright, saturated, kid-friendly.
-enum BlockColor: CaseIterable {
+/// Raw values are persisted in saved games -- do not reorder cases.
+enum BlockColor: Int, CaseIterable, Codable {
     case red, orange, yellow, green, teal, blue, purple, pink
 
     var base: Color {
@@ -32,6 +33,13 @@ struct Piece: Identifiable {
     let rowCount: Int
     let colCount: Int
 
+    init(blocks: [GridPoint], color: BlockColor) {
+        self.blocks = blocks
+        self.color = color
+        self.rowCount = (blocks.map(\.row).max() ?? 0) + 1
+        self.colCount = (blocks.map(\.col).max() ?? 0) + 1
+    }
+
     /// Builds a piece from a pattern like ["X.", "XX"] where "X" is a block.
     init(pattern: [String], color: BlockColor) {
         var blocks: [GridPoint] = []
@@ -40,10 +48,7 @@ struct Piece: Identifiable {
                 blocks.append(GridPoint(row: r, col: c))
             }
         }
-        self.blocks = blocks
-        self.color = color
-        self.rowCount = (blocks.map(\.row).max() ?? 0) + 1
-        self.colCount = (blocks.map(\.col).max() ?? 0) + 1
+        self.init(blocks: blocks, color: color)
     }
 }
 

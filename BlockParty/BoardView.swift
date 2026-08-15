@@ -11,12 +11,13 @@ struct PlacementPreview {
 
 /// A single rounded, glossy block.
 struct BlockView: View {
+    @Environment(\.theme) private var theme
     let color: BlockColor
     let size: CGFloat
 
     var body: some View {
         RoundedRectangle(cornerRadius: size * 0.24, style: .continuous)
-            .fill(color.base)
+            .fill(theme.color(for: color))
             .overlay(
                 RoundedRectangle(cornerRadius: size * 0.24, style: .continuous)
                     .fill(LinearGradient(colors: [.white.opacity(0.35), .white.opacity(0)],
@@ -32,6 +33,7 @@ struct BlockView: View {
 
 /// A small ring of dots that bursts outward from a clearing block and fades.
 private struct ClearSparkles: View {
+    @Environment(\.theme) private var theme
     let color: BlockColor
     let size: CGFloat
     /// True once the block starts shrinking away -- drives the burst.
@@ -45,7 +47,7 @@ private struct ClearSparkles: View {
                 let radians = Self.angles[i] * .pi / 180
                 let distance = size * 0.8
                 Circle()
-                    .fill(color.base)
+                    .fill(theme.color(for: color))
                     .frame(width: size * 0.15, height: size * 0.15)
                     .offset(x: burst ? cos(radians) * distance : 0,
                             y: burst ? sin(radians) * distance : 0)
@@ -79,6 +81,7 @@ struct PieceView: View {
 }
 
 struct BoardView: View {
+    @Environment(\.theme) private var theme
     @ObservedObject var engine: GameEngine
     let cellSize: CGFloat
     let preview: PlacementPreview?
@@ -143,7 +146,7 @@ struct BoardView: View {
                 }
             } else if let ghostColor {
                 RoundedRectangle(cornerRadius: cellSize * 0.22, style: .continuous)
-                    .fill(ghostColor.base.opacity(0.4))
+                    .fill(theme.color(for: ghostColor).opacity(0.4))
                     .padding(1.5)
             }
 
